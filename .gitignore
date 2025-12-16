@@ -1,0 +1,15 @@
+.DS_Store
+.DS_Store
+Thumbs.db
+
+# --- ESTO ES OBLIGATORIO (Si no, rompes el repo) ---
+mysql_data/
+db_data/
+
+# --- Dependencias (Correcto) ---
+/www/*/vendor/
+/www/*/node_modules/
+
+# --- Backups (Correcto) ---
+!backups/
+!backups/.gitkeep
