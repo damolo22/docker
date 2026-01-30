@@ -16,13 +16,17 @@ class TripFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-        'destination' => fake()->city(), 
-        'slug' => fake()->slug(),        // La url
-        'description' => fake()->paragraph(3), 
-        'price' => fake()->randomFloat(2, 100, 3000), 
-        'start_date' => fake()->dateTimeBetween('now', '+2 months'),
-        'end_date' => fake()->dateTimeBetween('+3 months', '+4 months'), 
+
+    $imageNumber = fake()->numberBetween(1, 6);
+    
+      return [
+        'destination' => fake()->city(),
+        'slug' => fake()->slug(), //La url
+        'image_url' => '/images/trips/trip-' . $imageNumber . '.jpg',
+        'description' => fake()->paragraph(4), 
+        'price' => fake()->randomFloat(2, 500, 4000),
+        'start_date' => fake()->dateTimeBetween('now', '+3 months'),
+        'end_date' => fake()->dateTimeBetween('+4 months', '+5 months'),
     ];
     }
 }

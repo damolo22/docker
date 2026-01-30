@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('destination');
             $table->string('slug')->unique(); //La url
+            $table->string('image_url');
             $table->text('description');
             $table->decimal('price', 10, 2); 
             $table->date('start_date'); 
