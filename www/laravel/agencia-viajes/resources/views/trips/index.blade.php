@@ -1,83 +1,82 @@
 <x-public-layout>
-    <div class="py-16 bg-gray-50 dark:bg-gray-900 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 px-4">
-            
-            <div class="mb-12 text-center max-w-3xl mx-auto">
-                <h1 class="text-5xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
-                    Find Your Next Getaway
-                </h1>
-                <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-                    Explore handpicked destinations at unbeatable prices. Your adventure starts here.
-                </p>
-            </div>
+    <div class="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans">
+        
+        <div class="bg-indigo-700 dark:bg-gray-800 py-8 px-4 sm:px-6 lg:px-8 text-center shadow-md relative z-10">
+            <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl mb-2">
+                Find Your Next Adventure
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg text-indigo-100 mb-6">
+                Curated trips at unbeatable prices.
+            </p>
 
-            <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl mb-24 border border-gray-100 dark:border-gray-700">
-                <form action="{{ route('trips.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
-                    <div class="md:col-span-5">
-                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-2">Destination</label>
-                        <div class="relative">
-                             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"></span>
-                            <input type="text" name="destination" value="{{ request('destination') }}" 
-                                   placeholder="Where are you going?" 
-                                   class="w-full pl-10 rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-3 focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
-                    </div>
-                    <div class="md:col-span-3">
-                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-2">Max Price</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"></span>
-                            <input type="number" name="price" value="{{ request('price') }}" 
-                                   placeholder="Budget limit" 
-                                   class="w-full pl-10 rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-3 focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
-                    </div>
-                    <div class="md:col-span-4 flex gap-4">
-                        <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition shadow-md text-lg">
-                            Search Trips
-                        </button>
-                        @if(request()->has('destination') || request()->has('price'))
-                            <a href="{{ route('trips.index') }}" class="flex items-center justify-center px-6 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-gray-500 dark:text-gray-400 hover:border-red-500 hover:text-red-500 transition font-bold">
-                                Clear
-                            </a>
-                        @endif
-                    </div>
+            <div class="max-w-xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2">
+                <form action="{{ route('trips.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" name="destination" value="{{ request('destination') }}" 
+                           placeholder="Destination (e.g. Bali)" 
+                           class="flex-1 border-transparent focus:border-indigo-500 focus:ring-0 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md py-2 text-sm">
+                    
+                    <input type="number" name="price" value="{{ request('price') }}" 
+                           placeholder="Max Price ($)" 
+                           class="w-full sm:w-32 border-transparent focus:border-indigo-500 focus:ring-0 text-gray-900 dark:text-white dark:bg-gray-700 rounded-md py-2 text-sm">
+                    
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-md transition w-full sm:w-auto text-sm">
+                        Search
+                    </button>
                 </form>
             </div>
+            
+            @if(request()->has('destination') || request()->has('price'))
+                <div class="mt-3">
+                    <a href="{{ route('trips.index') }}" class="text-indigo-200 hover:text-white underline text-sm transition">Clear Filters</a>
+                </div>
+            @endif
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach ($trips as $trip)
-                    <div class="group bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col h-full hover:-translate-y-2">
+                    <div class="flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition-shadow duration-300 h-full border border-gray-100 dark:border-gray-700">
                         
-                        <div class="relative h-64 overflow-hidden">
-                            <img src="{{ asset($trip->image_url) }}" alt="{{ $trip->destination }}" loading="lazy"
+                        <div class="h-64 w-full relative overflow-hidden group">
+                            <img src="{{ asset($trip->image_url) }}" 
+                                 alt="{{ $trip->destination }}" 
                                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                            <div class="absolute top-4 right-4 bg-white/95 dark:bg-gray-900/95 text-gray-900 dark:text-white text-sm font-black px-4 py-2 rounded-full shadow-sm">
+                            
+                            <div class="absolute bottom-0 left-0 bg-indigo-600 text-white px-4 py-1 rounded-tr-xl font-bold">
                                 ${{ intval($trip->price) }}
                             </div>
                         </div>
-                        
-                        <div class="p-8 flex-1 flex flex-col">
-                            <div class="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 font-bold mb-3">
-                                📅 {{ \Carbon\Carbon::parse($trip->start_date)->format('M d') }} - {{ \Carbon\Carbon::parse($trip->end_date)->format('M d, Y') }}
+
+                        <div class="p-6 flex flex-col flex-1">
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white truncate">
+                                    {{ $trip->destination }}
+                                </h3>
+                                <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                                    {{ \Carbon\Carbon::parse($trip->start_date)->diffInDays($trip->end_date) }} Days
+                                </span>
                             </div>
-                            
-                            <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-3 leading-tight">
-                                {{ $trip->destination }}
-                            </h2>
-                            
-                            <p class="text-gray-600 dark:text-gray-300 text-base mb-6 line-clamp-2 flex-1">
+
+                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 flex-1">
                                 {{ $trip->description }}
                             </p>
 
-                            <a href="{{ route('trips.show', $trip) }}" class="block w-full text-center bg-gray-100 dark:bg-gray-700/50 text-gray-900 dark:text-white font-bold py-4 rounded-2xl hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 transition-colors duration-300">
-                                View Details &rarr;
-                            </a>
+                            <div class="border-t border-gray-100 dark:border-gray-700 pt-4 mt-auto">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        📅 {{ \Carbon\Carbon::parse($trip->start_date)->format('M d') }} - {{ \Carbon\Carbon::parse($trip->end_date)->format('M d, Y') }}
+                                    </div>
+                                    <a href="{{ route('trips.show', $trip) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 font-bold text-sm hover:underline">
+                                        View Details &rarr;
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <div class="mt-16">
+            <div class="mt-12">
                 {{ $trips->links() }}
             </div>
         </div>

@@ -3,13 +3,17 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TripController;
+use App\Http\Controllers\BookingController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $bookings = Auth::user()->bookings()->with('trip')->latest()->get();
+
+    return view('dashboard', compact('bookings'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -17,11 +21,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/viajes/{trip}/book', [BookingController::class, 'store'])->name('bookings.store');
-    Route::get('/viajes/{trip:slug}', [TripController::class, 'show'])->name('trips.show');
 });
 
 
 Route::get('/viajes', [TripController::class, 'index'])->name('trips.index');
+Route::get('/viajes/{trip:slug}', [TripController::class, 'show'])->name('trips.show');
 
 
 require __DIR__.'/auth.php';
