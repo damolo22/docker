@@ -2,12 +2,23 @@
     <div class="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans">
         
         <div class="bg-indigo-700 dark:bg-gray-800 py-8 px-4 sm:px-6 lg:px-8 text-center shadow-md relative z-10">
+            
+            @if (Route::has('login'))
+                <div class="absolute top-5 right-5 z-20 hidden sm:block">
+                    @auth
+                        <a href="{{ url('/dashboard') }}" class="text-sm font-bold text-indigo-200 hover:text-white transition">Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="text-sm font-bold text-indigo-200 hover:text-white transition mr-4">Log in</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="text-sm font-bold text-indigo-200 hover:text-white transition">Register</a>
+                        @endif
+                    @endauth
+                </div>
+            @endif
+
             <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl mb-2">
                 Find Your Next Adventure
             </h1>
-            <p class="max-w-2xl mx-auto text-lg text-indigo-100 mb-6">
-                Curated trips at unbeatable prices.
-            </p>
 
             <div class="max-w-xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-2">
                 <form action="{{ route('trips.index') }}" method="GET" class="flex flex-col sm:flex-row gap-2">
@@ -41,6 +52,12 @@
                             <img src="{{ asset($trip->image_url) }}" 
                                  alt="{{ $trip->destination }}" 
                                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            
+                            @if($trip->category)
+                                <div class="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-indigo-600 dark:text-indigo-400 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm z-10 uppercase tracking-wider">
+                                    {{ $trip->category->name }}
+                                </div>
+                            @endif
                             
                             <div class="absolute bottom-0 left-0 bg-indigo-600 text-white px-4 py-1 rounded-tr-xl font-bold">
                                 ${{ intval($trip->price) }}
@@ -81,4 +98,4 @@
             </div>
         </div>
     </div>
-</x-public-layout>
+</x-public-layout> 

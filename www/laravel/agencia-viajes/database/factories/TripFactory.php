@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,6 +28,7 @@ class TripFactory extends Factory
         'price' => fake()->randomFloat(2, 500, 4000),
         'start_date' => fake()->dateTimeBetween('now', '+3 months'),
         'end_date' => fake()->dateTimeBetween('+4 months', '+5 months'),
+        'category_id' => Category::inRandomOrder()->first()->id ?? Category::factory(),
     ];
     }
 }

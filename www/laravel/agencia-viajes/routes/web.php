@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/viajes', [TripController::class, 'index'])->name('trips.index');
 Route::get('/viajes/{trip:slug}', [TripController::class, 'show'])->name('trips.show');
+Route::post('/trips/{trip}/review', [ReviewController::class, 'store'])->name('reviews.store');
 
 
 require __DIR__.'/auth.php';

@@ -11,4 +11,12 @@ class Trip extends Model
     public function bookings() {
         return $this->hasMany(Booking::class);
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
