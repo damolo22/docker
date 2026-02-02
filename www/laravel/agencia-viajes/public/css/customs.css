@@ -1,0 +1,32 @@
+/* public/css/custom.css */
+
+/* BOTONES DE ACCIÓN (Reservar, Enviar Review) */
+.btn-force-primary {
+    background-color: #4f46e5 !important; /* Indigo intenso */
+    color: #ffffff !important;           /* Texto blanco */
+    border: 1px solid #4338ca !important;
+    transition: all 0.3s ease;
+}
+
+.btn-force-primary:hover {
+    background-color: #3730a3 !important; /* Más oscuro al pasar el ratón */
+    transform: scale(1.02);               /* Efecto zoom */
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4) !important;
+}
+
+/* ESTRELLAS (DORADAS) */
+.star-gold {
+    color: #fbbf24 !important; /* Amarillo oscuro/dorado */
+    text-shadow: 0 0 2px rgba(0,0,0,0.1);
+}
+
+.star-gray {
+    color: #d1d5db !important; /* Gris suave */
+}
+
+/* ETIQUETAS DE CATEGORÍA */
+.tag-category {
+    background-color: #e0e7ff !important; /* Fondo azulito claro */
+    color: #3730a3 !important;           /* Texto azul oscuro */
+    border: 1px solid #c7d2fe !important;
+}

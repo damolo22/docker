@@ -24,6 +24,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/viajes/{trip}/book', [BookingController::class, 'store'])->name('bookings.store');
 });
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/trips/create', [TripController::class, 'create'])->name('trips.create');
+    Route::post('/trips', [TripController::class, 'store'])->name('trips.store');
+    Route::get('/trips/{trip}/edit', [TripController::class, 'edit'])->name('trips.edit');
+    Route::put('/trips/{trip}', [TripController::class, 'update'])->name('trips.update');
+    Route::delete('/trips/{trip}', [TripController::class, 'destroy'])->name('trips.destroy');
+});
 
 Route::get('/viajes', [TripController::class, 'index'])->name('trips.index');
 Route::get('/viajes/{trip:slug}', [TripController::class, 'show'])->name('trips.show');
