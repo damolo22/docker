@@ -16,13 +16,16 @@
                     @endauth
 
                     <x-nav-link :href="route('trips.index')" :active="request()->routeIs('trips.*')">
-                        {{ __('Browse Trips 🌍') }}
+                        {{ __('Browse Trips') }}
                     </x-nav-link>
 
                     @auth
                         @if(Auth::user()->rol == 'admin')
                             <x-nav-link :href="route('trips.create')" :active="request()->routeIs('trips.create')" class="text-indigo-600 font-bold">
                                 {{ __('+ New Trip') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
+                                {{ __('Users') }}
                             </x-nav-link>
                         @endif
                     @endauth

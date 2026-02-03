@@ -9,9 +9,19 @@ use App\Models\Category;
 
 class TripController extends Controller
 {
-    public function index()
+   public function index(Request $request)
     {
-        $trips = Trip::latest()->paginate(9);
+        $query = Trip::query();
+
+        if ($request->has('destination') && $request->destination != null) {
+            $query->where('destination', 'like', '%' . $request->destination . '%');
+        }
+
+        if ($request->has('price') && $request->price != null) {
+            $query->where('price', '<=', $request->price);
+        }
+
+        $trips = $query->latest()->paginate(9)->withQueryString();
 
         return view('trips.index', compact('trips'));
     }
@@ -109,6 +119,25 @@ class TripController extends Controller
 
         } catch (\Exception $e) {
             return back()->withErrors(['general' => 'No se pudo eliminar el viaje.']);
+        }
+    }
+
+    public function deleteGroup(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return back()->with('error', 'No has seleccionado ningún viaje.');
+        }
+
+        try {
+            $count = Trip::whereIn('id', $ids)->delete();
+            
+            return redirect()->route('trips.index')
+                ->with('success', "¡Se han eliminado $count viajes correctamente! 🗑️");
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al eliminar los viajes seleccionados.');
         }
     }
 }
