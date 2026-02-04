@@ -1,48 +1,40 @@
 <x-public-layout>
     <style>
-        /* Inputs modernos (Semitransparentes sobre fondo oscuro) */
+        /* TUS ESTILOS ORIGINALES */
         .input-glass {
-            background-color: rgba(255, 255, 255, 0.15)  ;
-            border: 1px solid rgba(255, 255, 255, 0.2)  ;
-            color: white  ;
-            transition: all 0.3s ease  ;
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
         }
-        .input-glass::placeholder {
-            color: rgba(255, 255, 255, 0.7)  ;
-        }
+        .input-glass::placeholder { color: rgba(255, 255, 255, 0.7); }
         .input-glass:focus {
-            background-color: white  ;
-            color: #1f2937  ; /* Gris oscuro */
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5)  ;
-            outline: none  ;
+            background-color: white;
+            color: #1f2937;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+            outline: none;
         }
-
-        /* Botón de Buscar */
         .btn-search-glow {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%)  ;
-            color: white  ;
-            border: none  ;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4)  ;
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         .btn-search-glow:hover {
             transform: translateY(-2px);
             filter: brightness(110%);
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.6)  ;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.6);
         }
-
         .link-clear {
-            color: #bfdbfe  ; 
+            color: #bfdbfe;
             font-size: 0.85rem;
             text-decoration: none;
             border-bottom: 1px dashed #bfdbfe;
         }
-        .link-clear:hover {
-            color: white  ;
-            border-bottom-style: solid;
-        }
-        .form{
+        .link-clear:hover { color: white; border-bottom-style: solid; }
+        .form {
             display:flex;
             border: none;
             width: 100%;
@@ -50,9 +42,24 @@
             text-align:center;
             justify-content:center;
         }
-        form{
-            width: 50%;
+        /* Tu estilo global (lo respeto pero lo sobreescribo abajo para el grid) */
+        form { width: 50%; }
+
+        /* --- NUEVOS ESTILOS PARA ELIMINACIÓN MASIVA --- */
+        /* Checkbox de Admin */
+        .admin-checkbox {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 0.35rem;
+            cursor: pointer;
+            accent-color: #ef4444; /* Rojo */
+            transition: transform 0.2s;
         }
+        .admin-checkbox:hover { transform: scale(1.1); }
+        
+        /* Corrección para que el grid ocupe todo el ancho */
+        #mass-delete-form { width: 100% !important; }
+    
     </style>
 
     <div class="bg-gray-50 dark:bg-gray-900 min-h-screen font-sans">
@@ -81,7 +88,7 @@
                     Find Your Next Adventure 
                 </h1>
 
-                <div class="form" class="bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-2xl">
+                <div class="form bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-2xl">
                     <form action="{{ route('trips.index') }}" method="GET" class="flex flex-col sm:flex-row gap-4">
                         <div class="flex-1">
                             <input type="text" name="destination" value="{{ request('destination') }}" 
@@ -117,71 +124,110 @@
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             
-            @if($trips->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    @foreach ($trips as $trip)
-                        <div class="flex flex-col bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full border border-gray-100 dark:border-gray-700 group">
+            <form action="{{ route('trips.delete.group') }}" method="POST" id="mass-delete-form">
+                @csrf
+                @method('DELETE')
+
+                @auth
+                    @if(Auth::user()->rol == 'admin')
+                        <div class="mb-10 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-indigo-100 dark:border-gray-700 flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-indigo-100 dark:bg-gray-700 p-2 rounded-lg">
+                                    <input type="checkbox" id="selectAll" class="admin-checkbox align-middle">
+                                </div>
+                                <label for="selectAll" class="text-sm font-bold text-gray-700 dark:text-gray-200 cursor-pointer select-none">
+                                    Select All Trips
+                                </label>
+                            </div>
                             
-                            <div class="h-64 w-full relative overflow-hidden">
-                                <img src="{{ asset($trip->image_url) }}" 
-                                     alt="{{ $trip->destination }}" 
-                                     class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
-
-                                @if($trip->category)
-                                    <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm text-indigo-700 text-xs font-black px-3 py-1.5 rounded-lg shadow-sm z-10 uppercase tracking-widest">
-                                        {{ $trip->category->name }}
-                                    </div>
-                                @endif
-                                
-                                <div class="absolute bottom-4 left-4 text-white">
-                                    <span class="text-2xl font-black">${{ intval($trip->price) }}</span>
-                                </div>
-                            </div>
-
-                            <div class="p-6 flex flex-col flex-1 relative">
-                                <div class="flex justify-between items-start mb-3">
-                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                                        {{ $trip->destination }}
-                                    </h3>
-                                    <span class="text-xs font-bold text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md whitespace-nowrap">
-                                        {{ \Carbon\Carbon::parse($trip->start_date)->diffInDays($trip->end_date) }} Days
-                                    </span>
-                                </div>
-
-                                <p class="text-gray-600 dark:text-gray-400 text-sm mb-6 line-clamp-3 flex-1 leading-relaxed">
-                                    {{ $trip->description }}
-                                </p>
-
-                                <div class="border-t border-gray-100 dark:border-gray-700 pt-4 mt-auto">
-                                    <div class="flex items-center justify-between">
-                                        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-                                            {{ \Carbon\Carbon::parse($trip->start_date)->format('M d') }} - {{ \Carbon\Carbon::parse($trip->end_date)->format('M d, Y') }}
-                                        </div>
-                                        <a href="{{ route('trips.show', $trip) }}" class="text-indigo-600 dark:text-indigo-400 font-black text-sm hover:underline flex items-center gap-1 group-hover:gap-2 transition-all">
-                                            View Details <span>&rarr;</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                            <button class="borrar" type="submit" onclick="return confirm('WARNING: Are you sure you want to delete ALL selected trips? This action cannot be undone.');" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg text-xs uppercase tracking-widest shadow-md transition transform hover:scale-105 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                Delete Selected
+                            </button>
                         </div>
-                    @endforeach
-                </div>
+                    @endif
+                @endauth
 
-                <div class="mt-16">
-                    {{ $trips->links() }}
-                </div>
-            @else
-                <div class="text-center py-20">
-                    <div class="text-6xl mb-4">🤔</div>
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">No trips found</h3>
-                    <p class="text-gray-500 dark:text-gray-400 mb-6">Try adjusting your search or price range.</p>
-                    <a href="{{ route('trips.index') }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 border border-transparent rounded-xl font-semibold text-white hover:bg-indigo-700 transition shadow-lg">
-                        View All Trips
-                    </a>
-                </div>
-            @endif
-        </div>
+                @if($trips->count() > 0)
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        @foreach ($trips as $trip)
+                            <div class="flex flex-col bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full border border-gray-100 dark:border-gray-700 group relative">
+                                
+                                @auth
+                                    @if(Auth::user()->rol == 'admin')
+                                        <div class="absolute top-4 left-4 z-30">
+                                            <input type="checkbox" name="ids[]" value="{{ $trip->id }}" class="admin-checkbox item-checkbox shadow-xl border-2 border-white">
+                                        </div>
+                                    @endif
+                                @endauth
+
+                                <div class="h-64 w-full relative overflow-hidden">
+                                    <img src="{{ asset($trip->image_url) }}" 
+                                         alt="{{ $trip->destination }}" 
+                                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                                    
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+
+                                    @if($trip->category)
+                                        <div class="absolute top-4 right-4 bg-white/95 backdrop-blur-sm text-indigo-700 text-xs font-black px-3 py-1.5 rounded-lg shadow-sm z-10 uppercase tracking-widest">
+                                            {{ $trip->category->name }}
+                                        </div>
+                                    @endif
+                                    
+                                    <div class="absolute bottom-4 left-4 text-white">
+                                        <span class="text-2xl font-black">${{ intval($trip->price) }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="p-6 flex flex-col flex-1 relative">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                                            {{ $trip->destination }}
+                                        </h3>
+                                        <span class="text-xs font-bold text-gray-500 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md whitespace-nowrap">
+                                            {{ \Carbon\Carbon::parse($trip->start_date)->diffInDays($trip->end_date) }} Days
+                                        </span>
+                                    </div>
+
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-6 line-clamp-3 flex-1 leading-relaxed">
+                                        {{ $trip->description }}
+                                    </p>
+
+                                    <div class="border-t border-gray-100 dark:border-gray-700 pt-4 mt-auto">
+                                        <div class="flex items-center justify-between">
+                                            <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                                                {{ \Carbon\Carbon::parse($trip->start_date)->format('M d') }} - {{ \Carbon\Carbon::parse($trip->end_date)->format('M d, Y') }}
+                                            </div>
+                                            <a href="{{ route('trips.show', $trip) }}" class="text-indigo-600 dark:text-indigo-400 font-black text-sm hover:underline flex items-center gap-1 group-hover:gap-2 transition-all">
+                                                View Details <span>&rarr;</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="mt-16">
+                        {{ $trips->links() }}
+                    </div>
+                @else
+                    <div class="text-center py-20">
+                        <div class="text-6xl mb-4"></div>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">No trips found</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mb-6">Try adjusting your search or price range.</p>
+                        <a href="{{ route('trips.index') }}" class="inline-flex items-center px-6 py-3 bg-indigo-600 border border-transparent rounded-xl font-semibold text-white hover:bg-indigo-700 transition shadow-lg">
+                            View All Trips
+                        </a>
+                    </div>
+                @endif
+            </form> </div>
     </div>
+
+    <script>
+        document.getElementById('selectAll')?.addEventListener('change', function() {
+            let checkboxes = document.querySelectorAll('.item-checkbox');
+            checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+        });
+    </script>
 </x-public-layout>

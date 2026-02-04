@@ -10,6 +10,35 @@
         </div>
     </x-slot>
 
+    <style>
+        /* Botón VER (Verde Esmeralda) */
+        .btn-mini-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white !important;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+            border: none;
+            text-decoration: none; /* Quitar subrayado */
+        }
+        .btn-mini-primary:hover {
+            transform: translateY(-1px);
+            filter: brightness(110%);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.5);
+        }
+
+        /* Botón CANCELAR (Rojo) */
+        .btn-mini-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            color: white !important;
+            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
+            border: none;
+        }
+        .btn-mini-danger:hover {
+            transform: translateY(-1px);
+            filter: brightness(110%);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.5);
+        }
+    </style>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
@@ -86,8 +115,21 @@
                                                     Paid
                                                 </span>
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{ route('trips.show', $booking->trip) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 font-bold hover:underline">View Trip</a>
+                                            
+                                            <td class="px-6 py-4 flex items-center justify-end gap-3">
+                                                <a href="{{ route('trips.show', $booking->trip) }}" class="btn-mini-primary py-1.5 px-3 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                                    View Trip
+                                                </a>
+
+                                                <form action="{{ route('bookings.destroy', $booking) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres cancelar esta reserva?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn-mini-danger py-1.5 px-3 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                        Cancel
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach

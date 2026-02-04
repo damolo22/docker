@@ -140,13 +140,17 @@
 
                         <div class="space-y-6 mb-12">
                             @forelse($trip->reviews as $review)
-                                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm">
+                                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 relative group">
+                                    
                                     <div class="flex items-center justify-between mb-3">
                                         <div class="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-3">
                                             <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-bold">
                                                 {{ substr($review->user->name, 0, 1) }}
                                             </div>
-                                            {{ $review->user->name }}
+                                            <div>
+                                                {{ $review->user->name }}
+                                                <div class="text-xs text-gray-400 font-normal">{{ $review->created_at->diffForHumans() }}</div>
+                                            </div>
                                         </div>
                                         <div class="flex text-lg">
                                             @for($i=0; $i < 5; $i++)
@@ -155,9 +159,31 @@
                                             @endfor
                                         </div>
                                     </div>
-                                    <p class="text-gray-600 dark:text-gray-300 italic">"{{ $review->content }}"</p>
-                                    <div class="text-xs text-gray-400 mt-4">{{ $review->created_at->diffForHumans() }}</div>
-                                </div>
+
+                                    <p class="text-gray-600 dark:text-gray-300 italic mb-2">"{{ $review->content }}"</p>
+
+                                   @auth
+                                        @if(Auth::id() === $review->user_id || Auth::user()->rol === 'admin')
+                                            <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-3">
+                                                
+                                                <a href="{{ route('reviews.edit', $review) }}" class="btn-force-edit text-xs font-bold py-1.5 px-4 rounded-lg shadow-sm flex items-center gap-1 transition transform hover:scale-105">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                    Edit
+                                                </a>
+
+                                                <form action="{{ route('reviews.destroy', $review) }}" method="POST" onsubmit="return confirm('⚠️ Are you sure you want to delete this review?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn-force-danger text-xs font-bold py-1.5 px-4 rounded-lg shadow-sm flex items-center gap-1 transition transform hover:scale-105">
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                        Delete
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        @endif
+                                    @endauth
+                                </div> 
                             @empty
                                 <div class="text-center py-10 bg-gray-50 dark:bg-gray-800/30 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700">
                                     <p class="text-gray-500 font-medium">No reviews yet.</p>
@@ -210,7 +236,7 @@
                                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
                                     </div>
                                     <h3 class="text-lg font-bold text-green-800 dark:text-green-300">Confirmed!</h3>
-                                    <p class="text-sm text-green-600 dark:text-green-400 mt-1">Pack your bags 🎒</p>
+                                    <p class="text-sm text-green-600 dark:text-green-400 mt-1">Pack your bags</p>
                                     <a href="{{ route('dashboard') }}" class="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-green-700 hover:underline">Go to Dashboard</a>
                                 </div>
                             @else
